@@ -1,0 +1,259 @@
+# テストケース。sql = レビュー対象、reference = 正解。
+# expected: 不一致（罠あり）／合致（正しい SQL。reference は同じ意味の別の書き方）
+# trap / expected / reference はブラインド評価の実行者には渡さない。
+
+- id: C01
+  trap: T01
+  expected: 不一致
+  requirement: 2026年6月（JST）のうち、化粧水（P001）に何らかの施策が実施されていた日の、化粧水の売上合計を知りたい。
+  sql: |
+    SELECT SUM(s.amount) AS sales_amount
+    FROM `dojo.sales` s
+    JOIN `dojo.promotions` p
+      ON s.product_id = p.product_id
+     AND DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN p.start_date AND p.end_date
+    WHERE s.product_id = 'P001'
+      AND DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+  reference: |
+    SELECT SUM(s.amount) AS sales_amount
+    FROM `dojo.sales` s
+    WHERE s.product_id = 'P001'
+      AND DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+      AND EXISTS (
+        SELECT 1 FROM `dojo.promotions` p
+        WHERE p.product_id = s.product_id
+          AND DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN p.start_date AND p.end_date)
+
+- id: C02
+  trap: T02
+  expected: 不一致
+  requirement: 2026年6月の目標がある得意先すべてについて、6月（JST）の売上実績と目標を並べた一覧がほしい。
+  sql: |
+    WITH act AS (
+      SELECT st.customer_id, SUM(s.amount) AS actual
+      FROM `dojo.sales` s
+      JOIN `dojo.stores` st ON s.store_id = st.store_id
+      WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+      GROUP BY st.customer_id
+    )
+    SELECT t.customer_id, t.target_amount, a.actual
+    FROM `dojo.targets` t
+    JOIN act a ON t.customer_id = a.customer_id
+    WHERE t.fiscal_month = DATE '2026-06-01'
+  reference: |
+    WITH act AS (
+      SELECT st.customer_id, SUM(s.amount) AS actual
+      FROM `dojo.sales` s
+      JOIN `dojo.stores` st ON s.store_id = st.store_id
+      WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+      GROUP BY st.customer_id
+    )
+    SELECT t.customer_id, t.target_amount, COALESCE(a.actual, 0) AS actual
+    FROM `dojo.targets` t
+    LEFT JOIN act a ON t.customer_id = a.customer_id
+    WHERE t.fiscal_month = DATE '2026-06-01'
+
+- id: C03
+  trap: T03
+  expected: 不一致
+  requirement: 関東以外の、稼働中の得意先の一覧がほしい。
+  sql: |
+    SELECT customer_id, customer_name, region
+    FROM `dojo.customers`
+    WHERE region <> '関東'
+      AND is_active
+  reference: |
+    SELECT customer_id, customer_name, region
+    FROM `dojo.customers`
+    WHERE (region IS NULL OR region <> '関東')
+      AND is_active
+
+- id: C04
+  trap: T04
+  expected: 不一致
+  requirement: 2026年6月（JST）に1回以上売上があった店舗の数を知りたい。
+  sql: |
+    SELECT COUNT(store_id) AS store_count
+    FROM `dojo.sales`
+    WHERE DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+  reference: |
+    SELECT COUNT(DISTINCT store_id) AS store_count
+    FROM `dojo.sales`
+    WHERE DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+
+- id: C05
+  trap: T05
+  expected: 不一致
+  requirement: 2026年6月（JST）の売上合計が30,000円以上だった得意先と、その売上合計を知りたい。
+  sql: |
+    SELECT st.customer_id, SUM(s.amount) AS sales_amount
+    FROM `dojo.sales` s
+    JOIN `dojo.stores` st ON s.store_id = st.store_id
+    WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+      AND s.amount >= 30000
+    GROUP BY st.customer_id
+  reference: |
+    SELECT st.customer_id, SUM(s.amount) AS sales_amount
+    FROM `dojo.sales` s
+    JOIN `dojo.stores` st ON s.store_id = st.store_id
+    WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+    GROUP BY st.customer_id
+    HAVING SUM(s.amount) >= 30000
+
+- id: C06
+  trap: T06
+  expected: 不一致
+  requirement: 2026年6月（JST）の全社の売上合計を知りたい。
+  sql: |
+    SELECT SUM(amount) AS sales_amount
+    FROM `dojo.sales`
+    WHERE DATE(sale_ts) BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+  reference: |
+    SELECT SUM(amount) AS sales_amount
+    FROM `dojo.sales`
+    WHERE DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+
+- id: C07
+  trap: T07
+  expected: 不一致
+  requirement: 2026年6月（JST）の梅田店（S07）の販売数量の合計を知りたい。
+  sql: |
+    SELECT SUM(qty) AS total_qty
+    FROM `dojo.sales`
+    WHERE store_id = 'S07'
+      AND DATE(sale_ts, 'Asia/Tokyo') >= DATE '2026-06-01'
+      AND DATE(sale_ts, 'Asia/Tokyo') < DATE '2026-06-30'
+  reference: |
+    SELECT SUM(qty) AS total_qty
+    FROM `dojo.sales`
+    WHERE store_id = 'S07'
+      AND DATE(sale_ts, 'Asia/Tokyo') >= DATE '2026-06-01'
+      AND DATE(sale_ts, 'Asia/Tokyo') < DATE '2026-07-01'
+
+- id: C08
+  trap: T08
+  expected: 不一致
+  requirement: 2026年6月（JST）の化粧水（P001）の売上合計を知りたい。
+  sql: |
+    SELECT SUM(amount) AS sales_amount
+    FROM `dojo.sales`
+    WHERE product_id = 'P001'
+      AND amount > 0
+      AND DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+  reference: |
+    SELECT SUM(amount) AS sales_amount
+    FROM `dojo.sales`
+    WHERE product_id = 'P001'
+      AND DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+
+- id: C09
+  trap: T09
+  expected: 不一致
+  requirement: 2026年6月（JST）のブランド別の売上合計を知りたい。
+  sql: |
+    SELECT p.brand, SUM(s.qty * p.list_price) AS sales_amount
+    FROM `dojo.sales` s
+    JOIN `dojo.products` p ON s.product_id = p.product_id
+    WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+    GROUP BY p.brand
+  reference: |
+    SELECT p.brand, SUM(s.amount) AS sales_amount
+    FROM `dojo.sales` s
+    JOIN `dojo.products` p ON s.product_id = p.product_id
+    WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+    GROUP BY p.brand
+
+- id: C10
+  trap: T10
+  expected: 不一致
+  requirement: 店舗×商品ごとの、最新の在庫数を知りたい。
+  sql: |
+    SELECT store_id, product_id, MAX(stock_qty) AS stock_qty
+    FROM `dojo.stock`
+    GROUP BY store_id, product_id
+  reference: |
+    SELECT store_id, product_id, stock_qty
+    FROM `dojo.stock`
+    QUALIFY ROW_NUMBER() OVER (PARTITION BY store_id, product_id ORDER BY snapshot_date DESC) = 1
+
+- id: C11
+  trap: T11
+  expected: 不一致
+  requirement: 2026年6月の、目標がある得意先全体での目標達成率を知りたい。
+  sql: |
+    WITH act AS (
+      SELECT st.customer_id, SUM(s.amount) AS actual
+      FROM `dojo.sales` s
+      JOIN `dojo.stores` st ON s.store_id = st.store_id
+      WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+      GROUP BY st.customer_id
+    )
+    SELECT AVG(COALESCE(a.actual, 0) / t.target_amount) AS achievement_rate
+    FROM `dojo.targets` t
+    LEFT JOIN act a ON t.customer_id = a.customer_id
+    WHERE t.fiscal_month = DATE '2026-06-01'
+  reference: |
+    WITH act AS (
+      SELECT st.customer_id, SUM(s.amount) AS actual
+      FROM `dojo.sales` s
+      JOIN `dojo.stores` st ON s.store_id = st.store_id
+      WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+      GROUP BY st.customer_id
+    )
+    SELECT SUM(COALESCE(a.actual, 0)) / SUM(t.target_amount) AS achievement_rate
+    FROM `dojo.targets` t
+    LEFT JOIN act a ON t.customer_id = a.customer_id
+    WHERE t.fiscal_month = DATE '2026-06-01'
+
+- id: C12
+  trap: T12
+  expected: 不一致
+  requirement: 2026年6月（JST）の売上合計の上位3店舗を知りたい。
+  sql: |
+    SELECT store_id, SUM(amount) AS sales_amount
+    FROM `dojo.sales`
+    WHERE DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+    GROUP BY store_id
+    ORDER BY sales_amount
+    LIMIT 3
+  reference: |
+    SELECT store_id, SUM(amount) AS sales_amount
+    FROM `dojo.sales`
+    WHERE DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+    GROUP BY store_id
+    ORDER BY sales_amount DESC
+    LIMIT 3
+
+- id: K01
+  trap: none
+  expected: 合致
+  requirement: 2026年6月（JST）の店舗別の売上合計を知りたい。
+  sql: |
+    SELECT s.store_id, st.store_name, SUM(s.amount) AS sales_amount
+    FROM `dojo.sales` s
+    JOIN `dojo.stores` st ON s.store_id = st.store_id
+    WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+    GROUP BY s.store_id, st.store_name
+  reference: |
+    SELECT s.store_id, st.store_name, SUM(s.amount) AS sales_amount
+    FROM `dojo.sales` s
+    JOIN `dojo.stores` st ON s.store_id = st.store_id
+    WHERE s.sale_ts >= TIMESTAMP '2026-05-31 15:00:00'
+      AND s.sale_ts <  TIMESTAMP '2026-06-30 15:00:00'
+    GROUP BY s.store_id, st.store_name
+
+- id: K02
+  trap: none
+  expected: 合致
+  requirement: 稼働中の得意先ごとの店舗数を知りたい（店舗が無い得意先も 0 として含める）。
+  sql: |
+    SELECT c.customer_id, c.customer_name, COUNT(DISTINCT st.store_id) AS store_count
+    FROM `dojo.customers` c
+    LEFT JOIN `dojo.stores` st ON c.customer_id = st.customer_id
+    WHERE c.is_active
+    GROUP BY c.customer_id, c.customer_name
+  reference: |
+    SELECT c.customer_id, c.customer_name,
+           (SELECT COUNT(*) FROM `dojo.stores` st WHERE st.customer_id = c.customer_id) AS store_count
+    FROM `dojo.customers` c
+    WHERE c.is_active
