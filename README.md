@@ -12,7 +12,9 @@ skill/                          ← 配布するのはここだけ
   SKILL.md                      手順と出力形式
   references/trap-checklist.md  罠 15 項目（見つけ方・Alteryx 対応・典型的な被害）
   references/metric-definitions.md  指標定義表の雛形（使う環境で記入する）
-  references/carry-sheet.md     持ち帰り票の規則と形式（会社データを出さずに結果だけ持ち帰る）
+  references/verdict-sheet.md   判定票（集計用の固定形式）
+  references/batch-review.md    ログ（xlsx）の一括レビューの設計と手順（v2）
+  scripts/                      v2 の分解・判定・集計のプログラム（Skill と一緒にコピーされる）
 tests/
   cases.yaml                    罠入り SQL 15 本 + 正しい SQL 10 本（罠に見えるが正しいもの）
   datasets.sql                  架空データ（sql-reading-dojo の複製）
@@ -22,7 +24,8 @@ tests/
   blind-eval/                   ブラインド評価の手順・結果表・出力の実物
   schema.md / metric-definitions.md  テスト用のテーブル定義・指標定義
 docs/
-  field-trial.md                会社環境で試すときのプロンプト・持ち帰り票（データを持ち出さずに結果だけ持ち帰る）
+  guide.md                      非エンジニア向けの解説（何か・挙動・使い方）
+  field-trial.md                初回試行の手順と判定票の使い方
   STATUS.md                     現在地・次にやること・未解決（状態の正）
   journal.md                    作業ログ
 CLAUDE.md                       規則と「情報の正」の表（毎セッション自動で読まれる）
@@ -40,7 +43,7 @@ rm -rf sql-requirement-review          # clone は Skill をコピーしたら�
 
 Gemini CLI を再起動し、`/skills` に `sql-requirement-review` が出ることを確認する。Claude Code なら `~/.claude/skills/` に同じ形で置く。
 
-**要件・SQL・結果のファイルは、このリポジトリの clone の中に置かない。** clone の中に置くと、後で `git add -A` → push した時に会社のデータが外に出る。Skill をコピーしたら clone は消し、レビュー作業は別の場所（例: `~/sql-review/`）で行う。万一 clone の中で作業しても、`.gitignore` で `req*.md`・`*_result.md`・`*_carry.md` は追跡対象外にしてあるが、これは最後の保険であって前提にしない。
+**要件・SQL・結果のファイルは、このリポジトリの clone の中に置かない。** clone の中に置くと、後で `git add -A` → push した時にレビュー対象のデータが公開リポジトリに載る。Skill をコピーしたら clone は消し、レビュー作業は別の場所（例: `~/sql-review/`）で行う。万一 clone の中で作業しても、`.gitignore` で `req*.md`・`*_result.md`・`*_carry.md` は追跡対象外にしてあるが、これは最後の保険であって前提にしない。
 
 ## 使い方
 
@@ -52,7 +55,7 @@ Gemini CLI を再起動し、`/skills` に `sql-requirement-review` が出るこ
 
 `bq` が使える環境では dry run と件数確認まで行う。実行は SELECT と `--dry_run` に限る（SKILL.md 手順 5）。
 
-会社のデータで試すときは `docs/field-trial.md` の手順で行う。持ち帰るのは罠 ID・判定・構造の言葉で書いた理由だけで、要件文・SQL・表名・数値は持ち帰らない。
+実際の要件と SQL で試すときは `docs/field-trial.md` の手順で行う。エージェントのログ（xlsx）を一括でレビューするなら `skill/references/batch-review.md`（v2。`pip install pandas openpyxl` が要る）。
 
 ## テスト
 

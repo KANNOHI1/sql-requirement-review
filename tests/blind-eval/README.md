@@ -33,6 +33,7 @@ Skill の検出精度を測る手順と結果。`tests/check_cases.py` は「ケ
 | 2026-09-29 15:29 | C14（持ち帰り票の試行、手順 2 旧文言） | Claude Sonnet（サブエージェント） | 要確認 | T13・T14（T14 を中に格下げ） | T14 | **否** | [carry-trial-C14.md](2026-09-29/carry-trial-C14.md) |
 | 2026-09-29 15:31 | C14（手順 2 修正後） | Claude Sonnet（サブエージェント） | 不一致 | T14 | T14 | 合 | [C14-rerun.md](2026-09-29/C14-rerun.md) |
 | 2026-09-29 15:31 | K07（手順 2 修正後） | Claude Sonnet（サブエージェント） | 合致 | なし | なし | 合 | [K07-rerun.md](2026-09-29/K07-rerun.md) |
+| 2026-09-29 21:30 | req003（v2 バッチ文面。架空ログの複数ターン「それを全体の達成率にして」、SQL は C11） | Claude Sonnet（サブエージェント） | 不一致 | T11（T09 不明） | T11 | 合 | [batch-trial-req003.md](2026-09-29/batch-trial-req003.md) |
 
 ## 気づき（STATUS の未解決に転記済み）
 
