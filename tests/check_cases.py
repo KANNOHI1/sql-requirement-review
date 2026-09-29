@@ -2,7 +2,8 @@
 
 罠ありケース（expected=不一致）は sql と reference の結果が違うこと、
 正解ケース（expected=合致）は結果が一致することを確かめる。
-データは sql-reading-dojo の content/datasets.sql を複製した tests/datasets.sql。
+データは sql-reading-dojo の content/datasets.sql を複製した tests/datasets.sql と、
+このリポジトリ独自の tests/datasets_extra.sql（T14 用の sales_raw）。
 
     python tests/check_cases.py
 """
@@ -15,6 +16,7 @@ import yaml
 
 HERE = Path(__file__).parent
 DATASETS = HERE / "datasets.sql"  # sql-reading-dojo の content/datasets.sql の複製
+EXTRA = HERE / "datasets_extra.sql"  # このリポジトリ独自の追加表（T14 用 sales_raw など）
 
 
 def to_duckdb(sql: str) -> str:
@@ -35,6 +37,7 @@ def main() -> int:
     con = duckdb.connect()
     con.execute("SET TimeZone='UTC'")
     con.execute(DATASETS.read_text(encoding="utf-8"))
+    con.execute(EXTRA.read_text(encoding="utf-8"))
 
     failed = 0
     for case in yaml.safe_load((HERE / "cases.yaml").read_text(encoding="utf-8")):

@@ -1,6 +1,6 @@
 # テーブル定義（テスト用・架空の化粧品卸「ミツキ化粧品」）
 
-データセット `dojo`。BigQuery。
+データセット `dojo`。BigQuery。`sales` は取引の正本、`sales_raw` は基幹システムからの取込生データ（重複を除く前）。
 
 | 表 | 列 | 型 | 意味 |
 |---|---|---|---|
@@ -26,6 +26,13 @@
 | | product_id | STRING | 商品 ID |
 | | qty | INT64 | 数量 |
 | | amount | INT64 | 実売金額（税抜・円。NULL 可） |
+| sales_raw | sale_id | STRING | 取引 ID（再送により同じ ID が複数行入ることがある） |
+| | sale_ts | TIMESTAMP | 取引日時 |
+| | store_id | STRING | 店舗 ID |
+| | product_id | STRING | 商品 ID |
+| | qty | INT64 | 数量 |
+| | amount | INT64 | 実売金額（税抜・円。NULL 可） |
+| | loaded_at | TIMESTAMP | 基幹システムから取り込んだ日時 |
 | promotions | promo_id | STRING | 施策 ID |
 | | promo_name | STRING | 施策名 |
 | | product_id | STRING | 対象商品 ID |

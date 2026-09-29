@@ -257,3 +257,52 @@
            (SELECT COUNT(*) FROM `dojo.stores` st WHERE st.customer_id = c.customer_id) AS store_count
     FROM `dojo.customers` c
     WHERE c.is_active
+
+- id: C13
+  trap: T13
+  expected: 不一致
+  requirement: 2026年6月の得意先別の売上合計を知りたい。
+  sql: |
+    SELECT customer_id, SUM(target_amount) AS sales_amount
+    FROM `dojo.targets`
+    WHERE fiscal_month = DATE '2026-06-01'
+    GROUP BY customer_id
+  reference: |
+    SELECT st.customer_id, SUM(s.amount) AS sales_amount
+    FROM `dojo.sales` s
+    JOIN `dojo.stores` st ON s.store_id = st.store_id
+    WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+    GROUP BY st.customer_id
+
+- id: C14
+  trap: T14
+  expected: 不一致
+  requirement: 2026年6月（JST）の売上合計を、基幹からの取込生データ（sales_raw）で確認したい。
+  sql: |
+    SELECT SUM(amount) AS sales_amount
+    FROM `dojo.sales_raw`
+    WHERE DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+  reference: |
+    WITH dedup AS (
+      SELECT *
+      FROM `dojo.sales_raw`
+      QUALIFY ROW_NUMBER() OVER (PARTITION BY sale_id ORDER BY loaded_at DESC) = 1
+    )
+    SELECT SUM(amount) AS sales_amount
+    FROM dedup
+    WHERE DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+
+- id: C15
+  trap: T15
+  expected: 不一致
+  requirement: ドラッグストアチャネルの、稼働中の得意先の数を知りたい。
+  sql: |
+    SELECT COUNT(*) AS customer_count
+    FROM `dojo.customers`
+    WHERE customer_name LIKE '%薬局%'
+      AND is_active
+  reference: |
+    SELECT COUNT(*) AS customer_count
+    FROM `dojo.customers`
+    WHERE channel = 'ドラッグ'
+      AND is_active
