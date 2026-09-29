@@ -13,6 +13,7 @@ BigQuery の SQL が営業の質問（業務要件）に答えているかを、
 | テスト用データ | `tests/datasets.sql`（dojo の複製。編集しない）、`tests/datasets_extra.sql`（独自追加） |
 | テスト用のテーブル定義・指標定義 | `tests/schema.md`、`tests/metric-definitions.md` |
 | 検出精度の実績と評価手順 | `tests/blind-eval/README.md`（結果表・出力の実物）。README の「テスト」節は要約 |
+| 会社環境での試行手順・持ち帰り票・試行の記録 | `docs/field-trial.md` |
 | 現在地・次にやること・未解決 | `docs/STATUS.md` |
 | 作業ログ | `docs/journal.md` |
 
