@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 tests/blind-eval/inputs/
+# 会社環境でのレビュー作業ファイル（万一 clone 内で作業しても追跡しない。最後の保険）
+req*.md
+*_result.md
+*_carry.md

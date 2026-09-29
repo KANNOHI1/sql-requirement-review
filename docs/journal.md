@@ -13,3 +13,4 @@
 2026-09-29 15:27｜持ち帰り票の規則を skill/references/carry-sheet.md に移し、SKILL.md に参照を追加、field-trial.md 第 1 節を 1 行の指示文に差し替え｜完了
 2026-09-29 15:31｜持ち帰り票の試行で C14 が要確認に落ちたのを受け、SKILL.md 手順 2 の名指し文言を修正。C14・K07 を再評価し両側合格。出力の実物と結果表を blind-eval に保存｜完了
 2026-09-29 15:33｜Skill・carry-sheet・field-trial に「git push・アップロード・送信で外に出さない」を明記（菅野さんの指摘）｜完了
+2026-09-29 15:35｜「保存して」の危険は保存先が clone 内の時だけと整理。README: Skill コピー後に clone を消し作業は git の外で。.gitignore に req*.md 等を保険で追加。field-trial の前提を修正｜完了

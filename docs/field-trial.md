@@ -4,7 +4,7 @@
 
 ## 1. 会社側で貼る指示文
 
-前提: `README.md` の「配置（Gemini CLI）」どおりに Skill を置き（`skill/` を丸ごとコピーするので `references/carry-sheet.md` も一緒に入る）、要件と SQL を 1 ファイル（例: `req01.md`）にまとめてある。`references/metric-definitions.md` は会社側で記入する（記入内容は会社の外に出さない）。
+前提: `README.md` の「配置（Gemini CLI）」どおりに Skill を置き（`skill/` を丸ごとコピーするので `references/carry-sheet.md` も一緒に入る）、clone は消してある。レビュー作業はこのリポジトリの clone とは無関係の作業ディレクトリ（例: `~/sql-review/`）で行い、そこに要件と SQL を 1 ファイル（例: `req01.md`）にまとめてある。「保存して」で書かれるファイルは VM の中に留まる。危ないのは保存先が git 管理下にある場合だけなので、作業ディレクトリを git の外に置くことで塞ぐ。`references/metric-definitions.md` は会社側で記入する（記入内容は会社の外に出さない）。
 
 ```
 @req01.md を sql-requirement-review スキルでレビューして。結果は req01_result.md に、持ち帰り票は req01_carry.md に保存して。
