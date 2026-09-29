@@ -5,4 +5,4 @@
 2026-09-29 13:40｜v1 初回コミット（Skill 本体・罠 15 項目・テスト 14 ケース）｜完了（ae09a07）
 2026-09-29 14:21｜C13〜C15 追加、datasets_extra.sql 新設、SKILL.md の項目数修正、ブラインド評価 3/3｜完了（aa50126）
 2026-09-29 14:21｜Draft PR #1 作成、監視開始｜完了
-2026-09-29 14:32｜文脈を git に逃がす運用（CLAUDE.md / STATUS / journal / save / recall / フック）を追加｜完了（ce36b0f）
+2026-09-29 14:32｜文脈を git に逃がす運用（CLAUDE.md / STATUS / journal / save / recall / フック）を追加｜完了（83867e7）
