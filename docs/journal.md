@@ -12,3 +12,4 @@
 2026-09-29 14:58｜K03〜K10（罠に見える正しい SQL）を追加してブラインド評価で過剰検出を測る。誤検出した項目の判断基準を SKILL/checklist に追記、会社 Gemini CLI 用の試行手順（docs/field-trial.md）を新設｜完了（b694f62・a92737c・field-trial は次の commit）
 2026-09-29 15:27｜持ち帰り票の規則を skill/references/carry-sheet.md に移し、SKILL.md に参照を追加、field-trial.md 第 1 節を 1 行の指示文に差し替え｜完了
 2026-09-29 15:31｜持ち帰り票の試行で C14 が要確認に落ちたのを受け、SKILL.md 手順 2 の名指し文言を修正。C14・K07 を再評価し両側合格。出力の実物と結果表を blind-eval に保存｜完了
+2026-09-29 15:33｜Skill・carry-sheet・field-trial に「git push・アップロード・送信で外に出さない」を明記（菅野さんの指摘）｜完了
