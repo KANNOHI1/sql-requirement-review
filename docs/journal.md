@@ -10,3 +10,4 @@
 2026-09-29 14:37｜前回 /save の漏れを補完: ブラインド評価の手順（tests/blind-eval/README.md）、入力生成スクリプト、C13〜C15 の出力全文、マージ方式の理由｜完了（47b8624）
 2026-09-29 14:40｜/save の手順 1 に「根拠と手順も実物で保存する」を追記、手順 4 の git 順序を add → commit → pull → push に修正｜完了（4a62eb7）
 2026-09-29 14:58｜K03〜K10（罠に見える正しい SQL）を追加してブラインド評価で過剰検出を測る。誤検出した項目の判断基準を SKILL/checklist に追記、会社 Gemini CLI 用の試行手順（docs/field-trial.md）を新設｜完了（b694f62・a92737c・field-trial は次の commit）
+2026-09-29 15:27｜持ち帰り票の規則を skill/references/carry-sheet.md に移し、SKILL.md に参照を追加、field-trial.md 第 1 節を 1 行の指示文に差し替え｜着手
