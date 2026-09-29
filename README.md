@@ -18,6 +18,11 @@ tests/
   datasets_extra.sql            このリポジトリ独自の追加表（T14 用の sales_raw）
   check_cases.py                ケース自体の正しさを DuckDB で検証
   schema.md / metric-definitions.md  テスト用のテーブル定義・指標定義
+docs/
+  STATUS.md                     現在地・次にやること・未解決（状態の正）
+  journal.md                    作業ログ
+CLAUDE.md                       規則と「情報の正」の表（毎セッション自動で読まれる）
+.claude/                        /save /recall コマンドと SessionStart フック
 ```
 
 ## 配置（Gemini CLI）
