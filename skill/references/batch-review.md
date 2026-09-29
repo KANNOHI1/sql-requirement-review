@@ -1,14 +1,16 @@
-# v2: エージェントのログを一括レビューして、直す場所を出す
+# ログの一括レビュー（v2）: 直す場所を出す
 
-目的は営業部への説明ではなく、**チームでエージェントを育てること**。ログの SQL を 1 本ずつ Skill で判定し、「どこを直せば何件減るか」を出す。すべて会社の VM の中で完結させ、持ち帰るのは `summary.md` の集計だけ。
+目的は**チームでエージェントを育てること**。ログの SQL を 1 本ずつこの Skill で判定し、「どこを直せば何件減るか」を出す。すべて Skill を置いた環境の中で完結する。
+
+**Gemini への指示**: 「ログ（xlsx）を一括でレビューして」と言われたら、xlsx を自分で読まない（行の切れ目・複数 SQL・セル内改行の解釈を LLM がすると壊れる）。下の A→B→C を `scripts/` のプログラムで実行する。B は自分の会話の中で 1 件ずつ読んで判定しない（文脈が溢れる）。`scripts/run_reviews.sh` が `gemini -p` を 1 件ごとに別プロセスで起動する。
 
 ## 3 段
 
 | 段 | 何が | 誰が | 入力 → 出力 |
 |---|---|---|---|
-| A 分解 | `tools/split_log.py` | Python | ログ xlsx → `work/reqNNN.md`（1 行 1 件）＋ `work/meta.csv` |
-| B 判定 | `tools/run_reviews.sh` | Gemini CLI（1 件 1 回） | `reqNNN.md` → `reqNNN_review.md`（レビュー結果＋持ち帰り票） |
-| C 集計 | `tools/aggregate.py` | Python | `*_review.md` ＋ `meta.csv` → `summary.md`・`rows.csv` |
+| A 分解 | `scripts/split_log.py` | Python | ログ xlsx → `work/reqNNN.md`（1 行 1 件）＋ `work/meta.csv` |
+| B 判定 | `scripts/run_reviews.sh` | Gemini CLI（1 件 1 回） | `reqNNN.md` → `reqNNN_review.md`（レビュー結果＋判定票） |
+| C 集計 | `scripts/aggregate.py` | Python | `*_review.md` ＋ `meta.csv` → `summary.md`・`rows.csv` |
 
 設計の理由（2026-09-29 の議論）:
 - **LLM に xlsx を読ませない。** 行の切れ目・複数 SQL・セル内改行の解釈はプログラムで確定的に行う。LLM が見るのは 1 件分だけ
@@ -16,22 +18,23 @@
 - **エージェントの回答文はレビュー入力に入れない。** 入れると回答に引きずられ、「SQL だけから何の質問に答えているかを書く」手順が崩れる
 - **1 行に複数 SQL がある時は最後の 1 本を対象にする**（書き直しの跡。最後が回答に使われた可能性が最も高い）。本数は meta に残す。`--sql all` で全部も可
 - **Gemini にファイルを書かせない。** 標準出力をシェルで保存する。YOLO 不要。bq も実行させない
-- **1 行 1 ファイル。** 持ち帰り票は同じファイルの `---CARRY---` 以降。集計はそこだけ読む
+- **1 行 1 ファイル。** 判定票は同じファイルの `---VERDICT---` 以降。集計はそこだけ読む
 - **重複除去はしない。** 2026-09-29 のログでは 227 本中 221 種類で、効かない
 
-## 手順（会社の VM）
+## 手順
 
-前提: README の配置どおり Skill を入れ、`metric-definitions.md` を記入してある。作業ディレクトリは clone の外（例: `~/sql-review/`）。`tools/` はこのリポジトリからコピーして持ち込む。
+前提: Skill を `~/.gemini/skills/sql-requirement-review/` に置き（`scripts/` も一緒に入る）、`references/metric-definitions.md` を記入してある。作業ディレクトリは git の外（例: `~/sql-review/`）。ターミナルから打つ（Gemini の会話の中で打ってもよいが、B は必ず `run_reviews.sh` 経由）。
 
 ```bash
 pip install pandas openpyxl
+S=~/.gemini/skills/sql-requirement-review/scripts
 # A. 分解（テーブル定義 schema.md は INFORMATION_SCHEMA から作っておく。無ければ --schema を省く）
-python tools/split_log.py --xlsx log.xlsx --out work/ --schema schema.md
+python $S/split_log.py --xlsx log.xlsx --out work/ --schema schema.md
 # B. まず 10 件だけ回して出来を見る → 問題なければ全件（途中で止めても再開できる）
-tools/run_reviews.sh work/ 10
-tools/run_reviews.sh work/
+bash $S/run_reviews.sh work/ 10
+bash $S/run_reviews.sh work/
 # C. 集計
-python tools/aggregate.py work/
+python $S/aggregate.py work/
 ```
 
 列名が違う時は `--col-timestamp 列1` のように指定する（既定は 2026-09-29 のログの列名）。他のシートに `正誤判定` 列があれば、セッション ID とターン番号で突き合わせて自動で取り込む。
@@ -47,10 +50,10 @@ python tools/aggregate.py work/
 
 1 件あたり Skill 一式＋テーブル定義＋依頼で 1.5 万トークン前後、出力 3 千。227 件で 350 万トークン程度、時間は逐次で 2〜4 時間。BigQuery は読まない（bq 禁止）。
 
-## 持ち帰るもの
+## 結果の扱い
 
-`summary.md` の数字（判定の分布、直す場所ごとの件数、人との一致率）。`reqNNN_review.md`・`rows.csv`・`meta.csv` は会社データを含むので持ち帰らない。
+`summary.md`・`rows.csv`・`reqNNN_review.md` はすべてこの環境の中で使う。用語集・システムプロンプト・スキーマ説明の修正はここから起こす。「先に読む行」を 1 件ずつ見て、判定票のエンジニア欄を埋めると、次の回で Skill と人の一致率が測れる。この Skill 自体（チェックリストの文言）を直したい時だけ、表名・数値を含まない要約（罠 ID・件数・理由の構造）を Skill の管理元に伝える。
 
-## 動作確認（このリポジトリ側）
+## 動作確認（Skill の管理元リポジトリ側）
 
 `python tests/check_tools.py` が架空ログで A と C を通す。B の文面は `tests/blind-eval/2026-09-29/batch-trial-req003.md`（複数ターンの入力を別モデルに処理させた実物）で確認済み。

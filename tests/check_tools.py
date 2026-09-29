@@ -1,4 +1,4 @@
-"""tools/ の分解→集計を、架空ログと合成したレビュー結果で通しで確かめる（Gemini は呼ばない）。
+"""skill/scripts/ の分解→集計を、架空ログと合成したレビュー結果で通しで確かめる（Gemini は呼ばない）。
 
     python tests/check_tools.py
 """
@@ -19,7 +19,7 @@ def carry(verdict, hits, unknown=(), q=1, high=0, mid=0, low=0):
         rows.append(f"| {t} | {v} | 理由 |")
     return "\n".join([
         f"## 判定: {verdict}", "理由", "読解のみ（未実行）", "", "## ズレ一覧", "なし", "",
-        "---CARRY---", "## 持ち帰り票", f"- 判定: {verdict}", "- 実行確認: 読解のみ", "- テーブル定義の入手: 事前に渡した", "",
+        "---VERDICT---", "## 判定票", f"- 判定: {verdict}", "- 実行確認: 読解のみ", "- テーブル定義の入手: 事前に渡した", "",
         "| T | 結果（該当／該当なし／不明） | 理由（構造の言葉で 1 行） |", "|---|---|---|", *rows, "",
         "- 要確認にした理由（判定が要確認のときだけ。構造の言葉で）:",
         "- 定義表が空で「定義なし」になった指標の数: 0 個",
@@ -32,7 +32,7 @@ def main() -> int:
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
         subprocess.run([sys.executable, HERE / "make_fake_log.py", td / "log.xlsx"], check=True, capture_output=True)
-        subprocess.run([sys.executable, ROOT / "tools/split_log.py", "--xlsx", td / "log.xlsx",
+        subprocess.run([sys.executable, ROOT / "skill/scripts/split_log.py", "--xlsx", td / "log.xlsx",
                         "--out", td / "work", "--schema", HERE / "schema.md"], check=True, capture_output=True)
         work = td / "work"
         reqs = sorted(p.name for p in work.glob("req*.md"))
@@ -51,7 +51,7 @@ def main() -> int:
         }
         for rid, txt in fake.items():
             (work / f"{rid}_review.md").write_text(txt, encoding="utf-8")
-        subprocess.run([sys.executable, ROOT / "tools/aggregate.py", work], check=True, capture_output=True)
+        subprocess.run([sys.executable, ROOT / "skill/scripts/aggregate.py", work], check=True, capture_output=True)
         s = (work / "summary.md").read_text(encoding="utf-8")
         assert "| 合致 | 2 |" in s and "| 不一致 | 2 |" in s and "| 要確認 | 1 |" in s, s
         assert "| T14 | 1 | 0 |" in s and "| T13 | 0 | 1 |" in s, s

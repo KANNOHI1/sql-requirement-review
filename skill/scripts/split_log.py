@@ -1,6 +1,6 @@
 """エージェントのログ（xlsx）を、1 行 1 レビューの入力ファイル（reqNNN.md）に分解する。
 
-    python tools/split_log.py --xlsx log.xlsx --out work/ [--schema schema.md]
+    python ~/.gemini/skills/sql-requirement-review/scripts/split_log.py --xlsx log.xlsx --out work/ [--schema schema.md]
         [--context session|turn] [--sql last|all] [--sheet rawdata]
 
 - 会社の VM の中で実行する。出力先はこのリポジトリの clone の外に置く

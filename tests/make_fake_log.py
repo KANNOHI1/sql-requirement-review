@@ -1,4 +1,4 @@
-"""tools/ の動作確認用に、架空のエージェントログ（xlsx）を cases.yaml から作る。会社のログと同じ列構成。
+"""skill/scripts/ の動作確認用に、架空のエージェントログ（xlsx）を cases.yaml から作る。会社のログと同じ列構成。
 
     python tests/make_fake_log.py OUT.xlsx
 """

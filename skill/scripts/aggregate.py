@@ -1,6 +1,6 @@
-"""reqNNN_review.md（レビュー結果＋持ち帰り票）を集計し、「直す場所 → 件数 → 該当行」の形にまとめる。
+"""reqNNN_review.md（レビュー結果＋判定票）を集計し、「直す場所 → 件数 → 該当行」の形にまとめる。
 
-    python tools/aggregate.py work/ [--out work/summary.md]
+    python ~/.gemini/skills/sql-requirement-review/scripts/aggregate.py work/ [--out work/summary.md]
 
 出力: summary.md（人が読む）と rows.csv（1 行 1 レビュー。判定・該当した T・正誤判定との一致）。
 目的はエージェントの育成なので、集計は「どこを直せば何件減るか」に寄せる。
@@ -31,7 +31,8 @@ def parse_review(text: str) -> dict:
     m = re.search(r"^## 判定[:：]\s*(合致|要確認|不一致)", text, re.M)
     if m:
         d["verdict"] = m.group(1)
-    carry = text.split("---CARRY---", 1)[1] if "---CARRY---" in text else text
+    marker = "---VERDICT---" if "---VERDICT---" in text else ("---CARRY---" if "---CARRY---" in text else None)
+    carry = text.split(marker, 1)[1] if marker else text
     for t in T_IDS:
         mt = re.search(rf"^\|\s*{t}\s*\|\s*([^|]*)\|", carry, re.M)
         if mt:
