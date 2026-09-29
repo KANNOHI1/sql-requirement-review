@@ -6,3 +6,14 @@
 2026-09-29 14:21｜C13〜C15 追加、datasets_extra.sql 新設、SKILL.md の項目数修正、ブラインド評価 3/3｜完了（aa50126）
 2026-09-29 14:21｜Draft PR #1 作成、監視開始｜完了
 2026-09-29 14:32｜文脈を git に逃がす運用（CLAUDE.md / STATUS / journal / save / recall / フック）を追加｜完了（83867e7）
+2026-09-29 14:35｜PR #1 を main にマージ（merge commit bbab8b4。squash にすると journal に書いた 83867e7 が main から辿れなくなるため merge を選択）、監視と定期確認を解除、作業ブランチを main から再開｜完了
+2026-09-29 14:37｜前回 /save の漏れを補完: ブラインド評価の手順（tests/blind-eval/README.md）、入力生成スクリプト、C13〜C15 の出力全文、マージ方式の理由｜完了（47b8624）
+2026-09-29 14:40｜/save の手順 1 に「根拠と手順も実物で保存する」を追記、手順 4 の git 順序を add → commit → pull → push に修正｜完了（4a62eb7）
+2026-09-29 14:58｜K03〜K10（罠に見える正しい SQL）を追加してブラインド評価で過剰検出を測る。誤検出した項目の判断基準を SKILL/checklist に追記、会社 Gemini CLI 用の試行手順（docs/field-trial.md）を新設｜完了（b694f62・a92737c・field-trial は次の commit）
+2026-09-29 15:27｜持ち帰り票の規則を skill/references/carry-sheet.md に移し、SKILL.md に参照を追加、field-trial.md 第 1 節を 1 行の指示文に差し替え｜完了
+2026-09-29 15:31｜持ち帰り票の試行で C14 が要確認に落ちたのを受け、SKILL.md 手順 2 の名指し文言を修正。C14・K07 を再評価し両側合格。出力の実物と結果表を blind-eval に保存｜完了
+2026-09-29 15:33｜Skill・carry-sheet・field-trial に「git push・アップロード・送信で外に出さない」を明記（菅野さんの指摘）｜完了
+2026-09-29 15:35｜「保存して」の危険は保存先が clone 内の時だけと整理。README: Skill コピー後に clone を消し作業は git の外で。.gitignore に req*.md 等を保険で追加。field-trial の前提を修正｜完了
+2026-09-29 15:37｜持ち帰り票の文章量を実測（全文約 1,300 字、該当なし除外で約 500 字）し、field-trial 第 3 節に「該当なしは転記しない」を追加｜完了
+2026-09-29 15:40｜field-trial に「会社 VM に個人の GitHub 認証情報を置かない」を実質的な保証として明記。result.md は会社側の成果物であることを追記｜完了
+2026-09-29 15:44｜会社の Gemini CLI で実要件・実 SQL の試行 1 本目を開始（[U-0929-04]）。持ち帰り票待ち｜着手
