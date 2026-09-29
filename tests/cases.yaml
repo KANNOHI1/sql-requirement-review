@@ -306,3 +306,145 @@
     FROM `dojo.customers`
     WHERE channel = 'ドラッグ'
       AND is_active
+
+# ---- 正しい SQL（罠に見えるが正しい）。過剰検出を測る。2026-09-29 追加 ----
+
+- id: K03
+  trap: none
+  expected: 合致
+  requirement: 2026年6月（JST）のブランド別の売上合計を知りたい。
+  sql: |
+    SELECT p.brand, SUM(s.amount) AS sales_amount
+    FROM `dojo.sales` s
+    JOIN `dojo.products` p ON s.product_id = p.product_id
+    WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+    GROUP BY p.brand
+  reference: |
+    SELECT brand, SUM(amt) AS sales_amount
+    FROM (
+      SELECT (SELECT p.brand FROM `dojo.products` p WHERE p.product_id = s.product_id) AS brand,
+             s.amount AS amt
+      FROM `dojo.sales` s
+      WHERE s.sale_ts >= TIMESTAMP '2026-05-31 15:00:00'
+        AND s.sale_ts <  TIMESTAMP '2026-06-30 15:00:00'
+    ) x
+    GROUP BY brand
+
+- id: K04
+  trap: none
+  expected: 合致
+  requirement: 2026年5月に発売した商品の一覧（商品 ID・商品名・発売日）がほしい。発売日の順に並べる。
+  sql: |
+    SELECT product_id, product_name, launch_date
+    FROM `dojo.products`
+    WHERE launch_date BETWEEN DATE '2026-05-01' AND DATE '2026-05-31'
+    ORDER BY launch_date
+  reference: |
+    SELECT product_id, product_name, launch_date
+    FROM `dojo.products`
+    WHERE EXTRACT(YEAR FROM launch_date) = 2026
+      AND EXTRACT(MONTH FROM launch_date) = 5
+    ORDER BY launch_date
+
+- id: K05
+  trap: none
+  expected: 合致
+  requirement: 2026年6月（JST）の取引件数を知りたい。返品・訂正の行も 1 件として数える。
+  sql: |
+    SELECT COUNT(*) AS sales_count
+    FROM `dojo.sales`
+    WHERE sale_ts >= TIMESTAMP '2026-05-31 15:00:00'
+      AND sale_ts <  TIMESTAMP '2026-06-30 15:00:00'
+  reference: |
+    SELECT COUNT(*) AS sales_count
+    FROM `dojo.sales`
+    WHERE DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+
+- id: K06
+  trap: none
+  expected: 合致
+  requirement: EC チャネル以外の、稼働中の得意先の一覧（得意先 ID・得意先名・チャネル）がほしい。
+  sql: |
+    SELECT customer_id, customer_name, channel
+    FROM `dojo.customers`
+    WHERE channel <> 'EC'
+      AND is_active
+  reference: |
+    SELECT customer_id, customer_name, channel
+    FROM `dojo.customers`
+    WHERE channel IN ('ドラッグ', 'GMS', '百貨店')
+      AND is_active = TRUE
+
+- id: K07
+  trap: none
+  expected: 合致
+  requirement: 基幹からの取込生データ（sales_raw）で、同じ取引 ID が 2 回以上入っている取引 ID の数を知りたい（取込の品質確認）。
+  sql: |
+    SELECT COUNT(*) AS dup_id_count
+    FROM (
+      SELECT sale_id
+      FROM `dojo.sales_raw`
+      GROUP BY sale_id
+      HAVING COUNT(*) > 1
+    ) d
+  reference: |
+    SELECT COUNT(DISTINCT r.sale_id) AS dup_id_count
+    FROM `dojo.sales_raw` r
+    WHERE (SELECT COUNT(*) FROM `dojo.sales_raw` x WHERE x.sale_id = r.sale_id) > 1
+
+- id: K08
+  trap: none
+  expected: 合致
+  requirement: ドラッグストアチャネルの、稼働中の得意先の数を知りたい。
+  sql: |
+    SELECT COUNT(*) AS customer_count
+    FROM `dojo.customers`
+    WHERE channel = 'ドラッグ'
+      AND is_active
+  reference: |
+    SELECT COUNT(DISTINCT customer_id) AS customer_count
+    FROM `dojo.customers`
+    WHERE channel IN ('ドラッグ')
+      AND is_active = TRUE
+
+- id: K09
+  trap: none
+  expected: 合致
+  requirement: 2026年6月の、目標がある得意先全体での目標達成率を知りたい。
+  sql: |
+    WITH act AS (
+      SELECT st.customer_id, SUM(s.amount) AS actual
+      FROM `dojo.sales` s
+      JOIN `dojo.stores` st ON s.store_id = st.store_id
+      WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+      GROUP BY st.customer_id
+    )
+    SELECT SUM(COALESCE(a.actual, 0)) / SUM(t.target_amount) AS achievement_rate
+    FROM `dojo.targets` t
+    LEFT JOIN act a ON t.customer_id = a.customer_id
+    WHERE t.fiscal_month = DATE '2026-06-01'
+  reference: |
+    SELECT
+      (SELECT SUM(s.amount)
+       FROM `dojo.sales` s
+       JOIN `dojo.stores` st ON s.store_id = st.store_id
+       JOIN `dojo.targets` t ON st.customer_id = t.customer_id AND t.fiscal_month = DATE '2026-06-01'
+       WHERE DATE(s.sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30')
+      /
+      (SELECT SUM(target_amount)
+       FROM `dojo.targets`
+       WHERE fiscal_month = DATE '2026-06-01') AS achievement_rate
+
+- id: K10
+  trap: none
+  expected: 合致
+  requirement: 2026年6月（JST）の総売上（返品・訂正を差し引く前の、販売分だけの合計）を知りたい。
+  sql: |
+    SELECT SUM(amount) AS gross_sales
+    FROM `dojo.sales`
+    WHERE amount > 0
+      AND DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
+  reference: |
+    SELECT SUM(CASE WHEN qty > 0 THEN amount END) AS gross_sales
+    FROM `dojo.sales`
+    WHERE DATE(sale_ts, 'Asia/Tokyo') BETWEEN DATE '2026-06-01' AND DATE '2026-06-30'
