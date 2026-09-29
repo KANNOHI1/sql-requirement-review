@@ -24,7 +24,7 @@ tests/
   blind-eval/                   ブラインド評価の手順・結果表・出力の実物
   schema.md / metric-definitions.md  テスト用のテーブル定義・指標定義
 docs/
-  field-trial.md                会社環境での初回試行の手順と判定票の使い方
+  field-trial.md                初回試行の手順と判定票の使い方
   STATUS.md                     現在地・次にやること・未解決（状態の正）
   journal.md                    作業ログ
 CLAUDE.md                       規則と「情報の正」の表（毎セッション自動で読まれる）
@@ -54,7 +54,7 @@ Gemini CLI を再起動し、`/skills` に `sql-requirement-review` が出るこ
 
 `bq` が使える環境では dry run と件数確認まで行う。実行は SELECT と `--dry_run` に限る（SKILL.md 手順 5）。
 
-会社のデータで試すときは `docs/field-trial.md` の手順で行う。エージェントのログ（xlsx）を一括でレビューするなら `skill/references/batch-review.md`（v2。`pip install pandas openpyxl` が要る）。どちらも Skill を置いた環境の中で完結し、この管理元に結果を戻す必要はない。
+実際の要件と SQL で試すときは `docs/field-trial.md` の手順で行う。エージェントのログ（xlsx）を一括でレビューするなら `skill/references/batch-review.md`（v2。`pip install pandas openpyxl` が要る）。
 
 ## テスト
 

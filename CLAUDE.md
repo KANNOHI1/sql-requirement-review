@@ -1,7 +1,7 @@
 # sql-requirement-review
 
 ## 目標
-BigQuery の SQL が営業の質問（業務要件）に答えているかを、SQL を読めない利用者の代わりに判定する Gemini CLI 用 Skill を作る。**Skill は置いた環境（会社の VM）の中で完結し、結果をこのリポジトリに戻す必要はない**（2026-09-29 決定）。実データ・社名・実テーブル名はこのリポジトリに入れない。
+BigQuery の SQL が営業の質問（業務要件）に答えているかを、SQL を読めない利用者の代わりに判定する Gemini CLI 用 Skill を作る。**Skill は置いた環境の中で完結する。結果を別の場所へ運ぶ前提の設計をしない**（2026-09-29 決定）。実データ・社名・実テーブル名はこのリポジトリに入れない。
 
 ## 情報の正（論点 → ファイル）
 | 論点 | 正になるファイル |
@@ -13,7 +13,7 @@ BigQuery の SQL が営業の質問（業務要件）に答えているかを、
 | テスト用データ | `tests/datasets.sql`（dojo の複製。編集しない）、`tests/datasets_extra.sql`（独自追加） |
 | テスト用のテーブル定義・指標定義 | `tests/schema.md`、`tests/metric-definitions.md` |
 | 検出精度の実績と評価手順 | `tests/blind-eval/README.md`（結果表・出力の実物）。README の「テスト」節は要約 |
-| 会社環境での初回試行の手順 | `docs/field-trial.md` |
+| 初回試行の手順 | `docs/field-trial.md` |
 | 判定票の形式 | `skill/references/verdict-sheet.md` |
 | v2 ログ一括レビューの設計・手順 | `skill/references/batch-review.md`。実装は `skill/scripts/`、動作確認は `tests/check_tools.py` |
 | 日ごとの整理（非エンジニア向け） | `docs/summaries/<日付>.md` |
