@@ -1,14 +1,13 @@
 # STATUS（状態の正）
 
 ## 現在地
-2026-09-29 21:30: v2（ログ一括レビュー）の 3 段ツールを作成（2529ce1）。`tools/split_log.py`（xlsx → 1 行 1 件、セッションの過去質問を文脈として付与、複数 SQL は最後を対象、正誤判定を他シートから取込）、`tools/run_reviews.sh`（Gemini CLI を 1 件 1 回、標準出力を保存、再開可）、`tools/aggregate.py`（直す場所別・部署別・ユーザー別・人の判定との突き合わせ）。`tests/check_tools.py` で架空ログの通しテスト OK。バッチ文面は別モデルで req003（複数ターン）を処理させ不一致・T11 を確認。設計と手順は `docs/batch-review.md`。会社側の試行 1 本目（req01）は未実施。PR #3 未マージ。21:34 菅野さんの指摘で方針を確定: Skill は会社の VM の中で完結し、結果をこのリポジトリに戻さない。持ち帰り票→判定票（集計用の固定形式）に改名、`tools/`→`skill/scripts/`、`docs/batch-review.md`→`skill/references/batch-review.md`（Skill をコピーするだけで全部入る）。
+2026-09-29 22:00: PR #3（v2: scripts/・判定票・batch-review・guide・field-trial の書き換え）を main にマージ（388205e）。main の Skill が v2。VM 側は 16 時に入れた旧 Skill のままなので入れ直しが必要。次は VM で Skill を入れ直し、ログ 10 件で一括レビューを試す。
 
 ## 次にやること
 - 会社側: README の配置手順で Skill を入れ直す（`scripts/`・`references/batch-review.md`・`verdict-sheet.md` が入る）→ `batch-review.md` の手順で 10 件 → 全 227 件 → `summary.md` から直す場所を決める [U-0929-09]
 - 会社側: 正誤判定列の行数と値の種類を確認（`aggregate.py` の正規化表に無い値があれば追加）
 - 会社側: エンジニアに質問 3 つ（①金額列の税区分と返品→用語集 No.4 ②元表のパーティションと刈り込み ③エージェントのサービスアカウントの 6〜8 月の全ジョブの課金バイト数を INFORMATION_SCHEMA.JOBS から）[U-0929-07][U-0929-08]
 - 会社側: VM の metric-definitions.md の「売上」行を書く
-- PR #3 のマージ（急ぎではない）
 
 ## 未解決・保留
 - [U-0929-01] SKILL.md に「直し方の方向は 1 行にとどめ、修正後 SQL の設計はしない」を足すか。C13 のブラインド評価で、モデルがレビュー対象外の「直した後の SQL」のズレを 3 件書き足した（正しいが冗長）。K03〜K10 はズレなしのため判断材料は増えず。次に C 系ケースを足した時に再確認
