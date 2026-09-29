@@ -13,7 +13,7 @@ skill/                          ← 配布するのはここだけ
   references/trap-checklist.md  罠 15 項目（見つけ方・Alteryx 対応・典型的な被害）
   references/metric-definitions.md  指標定義表の雛形（使う環境で記入する）
 tests/
-  cases.yaml                    罠入り SQL 15 本 + 正しい SQL 2 本
+  cases.yaml                    罠入り SQL 15 本 + 正しい SQL 10 本（罠に見えるが正しいもの）
   datasets.sql                  架空データ（sql-reading-dojo の複製）
   datasets_extra.sql            このリポジトリ独自の追加表（T14 用の sales_raw）
   check_cases.py                ケース自体の正しさを DuckDB で検証
@@ -54,4 +54,4 @@ pip install duckdb pyyaml
 python tests/check_cases.py
 ```
 
-罠入りケースは正解 SQL と結果が違うこと、正しいケースは一致することを確かめる（ケース自体の嘘を防ぐ）。Skill の検出精度は、答えを伏せた別モデルに SKILL.md どおりレビューさせて測った（v1: C01〜C12・K01〜K02 は 14/14 × 2 周。C13〜C15 は 2026-09-29 に追加し 3/3 × 1 周）。手順と出力の実物は `tests/blind-eval/` にある。
+罠入りケースは正解 SQL と結果が違うこと、正しいケースは一致することを確かめる（ケース自体の嘘を防ぐ）。Skill の検出精度は、答えを伏せた別モデルに SKILL.md どおりレビューさせて測った（v1: C01〜C12・K01〜K02 は 14/14 × 2 周。C13〜C15 は 2026-09-29 に追加し 3/3 × 1 周。正しい SQL の K03〜K10 は同日に追加し 8/8 合致・誤検出ゼロ × 1 周）。手順と出力の実物は `tests/blind-eval/` にある。
