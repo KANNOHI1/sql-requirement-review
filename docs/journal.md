@@ -6,3 +6,4 @@
 2026-09-29 14:21｜C13〜C15 追加、datasets_extra.sql 新設、SKILL.md の項目数修正、ブラインド評価 3/3｜完了（aa50126）
 2026-09-29 14:21｜Draft PR #1 作成、監視開始｜完了
 2026-09-29 14:32｜文脈を git に逃がす運用（CLAUDE.md / STATUS / journal / save / recall / フック）を追加｜完了（83867e7）
+2026-09-29 14:35｜PR #1 を main にマージ（merge commit bbab8b4）、監視と定期確認を解除、作業ブランチを main から再開｜完了
