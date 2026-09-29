@@ -17,7 +17,7 @@ description: BigQuery の SQL が業務要件（営業の質問）と合って�
 
 ## 参照ファイル（このスキルのディレクトリ内）
 
-- `references/trap-checklist.md` — 罠 12 項目。手順 4 で**全項目**を点検する
+- `references/trap-checklist.md` — 罠 15 項目。手順 4 で**全項目**を点検する
 - `references/metric-definitions.md` — 指標の定義表。手順 1 と T09 で使う。空欄の指標は「定義なし」として扱う
 
 ## 手順
