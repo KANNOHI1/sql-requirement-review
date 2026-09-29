@@ -12,6 +12,7 @@ skill/                          ← 配布するのはここだけ
   SKILL.md                      手順と出力形式
   references/trap-checklist.md  罠 15 項目（見つけ方・Alteryx 対応・典型的な被害）
   references/metric-definitions.md  指標定義表の雛形（使う環境で記入する）
+  references/carry-sheet.md     持ち帰り票の規則と形式（会社データを出さずに結果だけ持ち帰る）
 tests/
   cases.yaml                    罠入り SQL 15 本 + 正しい SQL 10 本（罠に見えるが正しいもの）
   datasets.sql                  架空データ（sql-reading-dojo の複製）
