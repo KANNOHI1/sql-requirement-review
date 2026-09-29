@@ -36,3 +36,4 @@
 2026-09-29 21:34｜方針確定（Skill は会社内で完結、結果を戻さない）。持ち帰り票→判定票（verdict-sheet.md、---VERDICT---）、tools/→skill/scripts/、batch-review.md を skill/references/ へ。SKILL.md に一括レビューの入口を追加。field-trial・README・CLAUDE.md を書き換え｜完了
 2026-09-29 21:39｜skill/ から管理元・リポジトリ・会社環境・日付・tests への言及を除去（Skill 単体で読める文面に）｜完了
 2026-09-29 21:45｜「会社内で完結」「管理元」「持ち出し」など内外の対比を示す表現を README・CLAUDE.md・field-trial・skill から除去｜完了
+2026-09-29 21:51｜非エンジニア向けの Skill 解説（何か・しないこと・構成・6 手順・判定の意味・罠 15・使い方 A/B・注意）を docs/guide.md に保存｜完了

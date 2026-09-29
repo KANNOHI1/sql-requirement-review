@@ -24,6 +24,7 @@ tests/
   blind-eval/                   ブラインド評価の手順・結果表・出力の実物
   schema.md / metric-definitions.md  テスト用のテーブル定義・指標定義
 docs/
+  guide.md                      非エンジニア向けの解説（何か・挙動・使い方）
   field-trial.md                初回試行の手順と判定票の使い方
   STATUS.md                     現在地・次にやること・未解決（状態の正）
   journal.md                    作業ログ
