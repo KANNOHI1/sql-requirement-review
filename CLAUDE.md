@@ -14,6 +14,8 @@ BigQuery の SQL が営業の質問（業務要件）に答えているかを、
 | テスト用のテーブル定義・指標定義 | `tests/schema.md`、`tests/metric-definitions.md` |
 | 検出精度の実績と評価手順 | `tests/blind-eval/README.md`（結果表・出力の実物）。README の「テスト」節は要約 |
 | 会社環境での試行手順・持ち帰り票・試行の記録 | `docs/field-trial.md` |
+| v2 ログ一括レビューの設計・手順 | `docs/batch-review.md`。実装は `tools/`、動作確認は `tests/check_tools.py` |
+| 日ごとの整理（非エンジニア向け） | `docs/summaries/<日付>.md` |
 | 現在地・次にやること・未解決 | `docs/STATUS.md` |
 | 作業ログ | `docs/journal.md` |
 

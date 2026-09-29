@@ -21,7 +21,10 @@ tests/
   make_blind_inputs.py          ブラインド評価の入力（答え抜き）を作る
   blind-eval/                   ブラインド評価の手順・結果表・出力の実物
   schema.md / metric-definitions.md  テスト用のテーブル定義・指標定義
+tools/                          v2: ログの一括レビュー（分解 → Gemini CLI で判定 → 集計）
+  split_log.py / run_reviews.sh / aggregate.py
 docs/
+  batch-review.md               v2 の設計・手順・summary の読み方
   field-trial.md                会社環境で試すときのプロンプト・持ち帰り票（データを持ち出さずに結果だけ持ち帰る）
   STATUS.md                     現在地・次にやること・未解決（状態の正）
   journal.md                    作業ログ
@@ -52,7 +55,7 @@ Gemini CLI を再起動し、`/skills` に `sql-requirement-review` が出るこ
 
 `bq` が使える環境では dry run と件数確認まで行う。実行は SELECT と `--dry_run` に限る（SKILL.md 手順 5）。
 
-会社のデータで試すときは `docs/field-trial.md` の手順で行う。持ち帰るのは罠 ID・判定・構造の言葉で書いた理由だけで、要件文・SQL・表名・数値は持ち帰らない。
+会社のデータで試すときは `docs/field-trial.md` の手順で行う。エージェントのログ（xlsx）を一括でレビューするなら `docs/batch-review.md`（v2）。持ち帰るのは罠 ID・判定・構造の言葉で書いた理由だけで、要件文・SQL・表名・数値は持ち帰らない。
 
 ## テスト
 
