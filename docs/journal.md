@@ -34,3 +34,4 @@
 2026-09-29 21:24｜v2: エージェントログ（xlsx）を 1 行 1 レビューに分解→Gemini CLI で一括判定→直す場所別に集計する 3 段のツール（tools/）と手順書を作る。テストは架空ログで｜完了（2529ce1）
 2026-09-29 21:30｜v2 の設計議論の結論（要件は過去質問をつなぐ＝レビュー側にエージェントと同じ情報を渡すため／1 ファイルに統合／集計は直す場所別）を batch-review.md に記録。バッチ文面の試行 req003 を blind-eval に保存｜完了
 2026-09-29 21:34｜方針確定（Skill は会社内で完結、結果を戻さない）。持ち帰り票→判定票（verdict-sheet.md、---VERDICT---）、tools/→skill/scripts/、batch-review.md を skill/references/ へ。SKILL.md に一括レビューの入口を追加。field-trial・README・CLAUDE.md を書き換え｜完了
+2026-09-29 21:39｜skill/ から管理元・リポジトリ・会社環境・日付・tests への言及を除去（Skill 単体で読める文面に）｜完了

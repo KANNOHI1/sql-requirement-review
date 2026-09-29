@@ -3,7 +3,7 @@
     python ~/.gemini/skills/sql-requirement-review/scripts/split_log.py --xlsx log.xlsx --out work/ [--schema schema.md]
         [--context session|turn] [--sql last|all] [--sheet rawdata]
 
-- 会社の VM の中で実行する。出力先はこのリポジトリの clone の外に置く
+- 出力先は git 管理下の外に置く（レビュー対象の SQL と要件が含まれるため）
 - レビュー入力に入れるのは「要件（ユーザーの質問）」「SQL」「テーブル定義」だけ。
   エージェントの回答文は入れない（レビューが回答に引きずられるのを防ぐ）
 - 行ごとの付帯情報（部署・ユーザー・セッション・ターン・SQL 本数・正誤判定など）は meta.csv に書く
