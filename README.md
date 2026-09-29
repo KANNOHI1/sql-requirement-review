@@ -17,6 +17,8 @@ tests/
   datasets.sql                  架空データ（sql-reading-dojo の複製）
   datasets_extra.sql            このリポジトリ独自の追加表（T14 用の sales_raw）
   check_cases.py                ケース自体の正しさを DuckDB で検証
+  make_blind_inputs.py          ブラインド評価の入力（答え抜き）を作る
+  blind-eval/                   ブラインド評価の手順・結果表・出力の実物
   schema.md / metric-definitions.md  テスト用のテーブル定義・指標定義
 docs/
   STATUS.md                     現在地・次にやること・未解決（状態の正）
@@ -52,4 +54,4 @@ pip install duckdb pyyaml
 python tests/check_cases.py
 ```
 
-罠入りケースは正解 SQL と結果が違うこと、正しいケースは一致することを確かめる（ケース自体の嘘を防ぐ）。Skill の検出精度は、答えを伏せた別モデルに SKILL.md どおりレビューさせて測った（v1: C01〜C12・K01〜K02 は 14/14 × 2 周。C13〜C15 は 2026-09-29 に追加し 3/3 × 1 周）。
+罠入りケースは正解 SQL と結果が違うこと、正しいケースは一致することを確かめる（ケース自体の嘘を防ぐ）。Skill の検出精度は、答えを伏せた別モデルに SKILL.md どおりレビューさせて測った（v1: C01〜C12・K01〜K02 は 14/14 × 2 周。C13〜C15 は 2026-09-29 に追加し 3/3 × 1 周）。手順と出力の実物は `tests/blind-eval/` にある。
