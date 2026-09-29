@@ -42,7 +42,7 @@ rm -rf sql-requirement-review          # clone は Skill をコピーしたら�
 
 Gemini CLI を再起動し、`/skills` に `sql-requirement-review` が出ることを確認する。Claude Code なら `~/.claude/skills/` に同じ形で置く。
 
-**要件・SQL・結果のファイルは、このリポジトリの clone の中に置かない。** clone の中に置くと、後で `git add -A` → push した時に会社のデータが外に出る。Skill をコピーしたら clone は消し、レビュー作業は別の場所（例: `~/sql-review/`）で行う。万一 clone の中で作業しても、`.gitignore` で `req*.md`・`*_result.md`・`*_carry.md` は追跡対象外にしてあるが、これは最後の保険であって前提にしない。
+**要件・SQL・結果のファイルは、このリポジトリの clone の中に置かない。** clone の中に置くと、後で `git add -A` → push した時にレビュー対象のデータが公開リポジトリに載る。Skill をコピーしたら clone は消し、レビュー作業は別の場所（例: `~/sql-review/`）で行う。万一 clone の中で作業しても、`.gitignore` で `req*.md`・`*_result.md`・`*_carry.md` は追跡対象外にしてあるが、これは最後の保険であって前提にしない。
 
 ## 使い方
 

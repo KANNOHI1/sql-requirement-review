@@ -10,7 +10,7 @@ Gemini CLI で、実際の要件と SQL にこの Skill を 1 本使ってみる
 @req01.md を sql-requirement-review スキルでレビューして。判定票も付けて、req01_result.md に保存して。
 ```
 
-判定票の形式は Skill 内の `references/verdict-sheet.md` にあり、Gemini がそれを読んでレビュー結果の末尾（`---VERDICT---` 以降）に書く。`req01_result.md` が会社側の成果物で、ズレ一覧を読み、確認質問をエンジニアに送るために使う。
+判定票の形式は Skill 内の `references/verdict-sheet.md` にあり、Gemini がそれを読んでレビュー結果の末尾（`---VERDICT---` 以降）に書く。`req01_result.md` が成果物で、ズレ一覧を読み、確認質問をエンジニアに送るために使う。
 
 **Skill を使う VM に GitHub の認証情報（トークン、`gh auth login`、git の credential）を置かない。** 公開リポジトリの clone に認証は要らず、push には要る。置かなければ Gemini CLI は物理的に GitHub へ書けない。これが実質的な保証で、Skill の文言・.gitignore・clone の削除はその上の保険にすぎない。
 
