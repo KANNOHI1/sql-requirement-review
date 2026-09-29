@@ -14,6 +14,8 @@
 
 **会社の VM に個人の GitHub 認証情報（トークン、`gh auth login`、git の credential）を置かない。** 公開リポジトリの clone に認証は要らず、push には要る。置かなければ Gemini CLI は物理的にこのリポジトリへ書けない。これが実質的な保証で、以下の Skill の文言・.gitignore・clone の削除はその上の保険にすぎない。
 
+**Skill の導入（clone・コピー）も Gemini にやらせない。JupyterLab のターミナルで自分で打つ。** 2026-09-29 の試行で、Gemini に clone を頼んだところ URL の綴り違い（`requirment`）で clone に失敗し、Gemini はそれを認証の問題と誤解して `gh auth status`・`git config --list`・`ssh -T git@github.com` と認証情報を探し始めた。しかも YOLO モード（確認なしで実行）が ON だった。**YOLO モードは使わない**（Ctrl+Y で OFF）。OFF ならシェル実行のたびに確認が出る。
+
 **Gemini に git push・アップロード・送信を指示しない**（Skill 側でも拒否するよう書いてあるが、LLM への指示は破られうる）。会社の VM から外へ出す操作を AI にやらせると、目視確認を飛ばした非公式の持ち出し経路になる。持ち帰りは目視確認の後、菅野さんが自分の手で、会社の規則に従った経路で行う。
 
 ## 2. エンジニアと話した後に手で足す欄
