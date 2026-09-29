@@ -10,5 +10,5 @@ description: 会話で出た結論を実体ファイルと STATUS に書き、co
    - 「次にやること」を現状に合わせる
    - 「未解決・保留」に足す前に `grep -n '\[U-' docs/STATUS.md` で重複を確かめる。ID は `[U-MMDD-NN]`。終わった行は消さず「クローズ（日付・理由）」へ書き換える
 3. `docs/journal.md` の「着手」行を「完了（commit ハッシュ）」へ書き換える。ハッシュはその作業を push した commit のもの。今回の commit に含める作業なら「完了」とだけ書き、ハッシュは次の /save で埋める
-4. `git pull --rebase` → `git add -A` → commit → `git push -u origin <現在のブランチ>`
+4. `git add -A` → commit → `git pull --rebase` → `git push -u origin <現在のブランチ>`（pull を先にすると未ステージの変更があって失敗する）
 5. 3 行で報告する: 書いたファイル／更新した STATUS の行／commit ハッシュ
