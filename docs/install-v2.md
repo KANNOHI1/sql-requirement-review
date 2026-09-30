@@ -32,16 +32,16 @@ pip install pandas openpyxl
 
 ## 5. 作業フォルダを作り、ログを置く
 
-作業フォルダは `product_nl/2_product/sql-requirement-review/` の中に `sql-review` として作る。
+作業フォルダは `project_nl/2_project/sql-requirement-review/` の中に `sql-review` として作る。
 
 ```
-mkdir -p ~/product_nl/2_product/sql-requirement-review/sql-review
-cd ~/product_nl/2_product/sql-requirement-review/sql-review
+mkdir -p ~/project_nl/2_project/sql-requirement-review/sql-review
+cd ~/project_nl/2_project/sql-requirement-review/sql-review
 ```
 
-`product_nl` がホーム直下に無ければ、`~/` の部分を実際の場所に読み替える。移動できたか確かめるには `pwd` と打つ。
+`project_nl` がホーム直下に無ければ、`~/` の部分を実際の場所に読み替える。移動できたか確かめるには `pwd` と打つ。
 
-念のため、親フォルダ `product_nl/2_product/sql-requirement-review/` が git の clone でないことを確認する（`ls -a ..` で `.git` が出なければよい）。clone の中なら、手順 1 の最後で消しているはずなので通常は出ない。
+念のため、親フォルダ `project_nl/2_project/sql-requirement-review/` が git の clone でないことを確認する（`ls -a ..` で `.git` が出なければよい）。clone の中なら、手順 1 の最後で消しているはずなので通常は出ない。
 
 Jupyter のファイル一覧で `sql-review` フォルダにログの xlsx を置く。以下ではファイル名を `log.xlsx` としている。違う名前なら読み替える。
 

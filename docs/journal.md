@@ -40,3 +40,4 @@
 2026-09-29 22:00｜PR #3 を main にマージ（merge commit 388205e）。作業ブランチを main から再開｜完了
 2026-09-29 22:07｜v2 の導入と一括レビューの手順を docs/install-v2.md に保存（作業用。終わったら消す）｜完了
 2026-09-30 11:09｜install-v2 の作業フォルダを product_nl/2_product/sql-requirement-review/sql-review に変更（菅野さんの指定）｜完了
+2026-09-30 11:12｜install-v2 の作業フォルダを project_nl/2_project/… に訂正（product は誤り）｜完了
