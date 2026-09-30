@@ -4,7 +4,7 @@
 2026-09-29 22:00: PR #3（v2: scripts/・判定票・batch-review・guide・field-trial の書き換え）を main にマージ（388205e）。main の Skill が v2。VM 側は 16 時に入れた旧 Skill のままなので入れ直しが必要。次は VM で Skill を入れ直し、ログ 10 件で一括レビューを試す。
 
 ## 次にやること
-- 会社側: README の配置手順で Skill を入れ直す（`scripts/`・`references/batch-review.md`・`verdict-sheet.md` が入る）→ `batch-review.md` の手順で 10 件 → 全 227 件 → `summary.md` から直す場所を決める [U-0929-09]
+- VM に v2 導入済み（9/30）。`docs/install-v2.md` の手順 3 以降: pandas 導入 → 作業フォルダにログを置く → 10 件 → 全 227 件 → `summary.md` から直す場所を決める [U-0929-09]
 - 会社側: 正誤判定列の行数と値の種類を確認（`aggregate.py` の正規化表に無い値があれば追加）
 - 会社側: エンジニアに質問 3 つ（①金額列の税区分と返品→用語集 No.4 ②元表のパーティションと刈り込み ③エージェントのサービスアカウントの 6〜8 月の全ジョブの課金バイト数を INFORMATION_SCHEMA.JOBS から）[U-0929-07][U-0929-08]
 - 会社側: VM の metric-definitions.md の「売上」行を書く

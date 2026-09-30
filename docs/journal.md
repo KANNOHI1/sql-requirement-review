@@ -42,3 +42,4 @@
 2026-09-30 11:09｜install-v2 の作業フォルダを product_nl/2_product/sql-requirement-review/sql-review に変更（菅野さんの指定）｜完了
 2026-09-30 11:12｜install-v2 の作業フォルダを project_nl/2_project/… に訂正（product は誤り）｜完了
 2026-09-30 11:16｜install-v2 の作業フォルダを project_nl/2_product/sql-requirement-review/sql-review に確定｜完了
+2026-09-30 14:47｜菅野さんが VM に v2 Skill を導入済み（時刻不明）。install-v2 の手順 1 は完了｜完了
