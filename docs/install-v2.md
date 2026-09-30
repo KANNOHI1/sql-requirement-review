@@ -39,7 +39,7 @@ mkdir -p ~/project_nl/2_project/sql-requirement-review/sql-review
 cd ~/project_nl/2_project/sql-requirement-review/sql-review
 ```
 
-`product_nl` がホーム直下に無ければ、`~/` の部分を実際の場所に読み替える。移動できたか確かめるには `pwd` と打つ。
+`project_nl` がホーム直下に無ければ、`~/` の部分を実際の場所に読み替える。移動できたか確かめるには `pwd` と打つ。
 
 念のため、親フォルダ `project_nl/2_project/sql-requirement-review/` が git の clone でないことを確認する（`ls -a ..` で `.git` が出なければよい）。clone の中なら、手順 1 の最後で消しているはずなので通常は出ない。
 
